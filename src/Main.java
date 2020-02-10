@@ -33,8 +33,17 @@ public class Main {
                     //print all contacts
                     break;
                 case 3:
-
-
+                    addContact();
+                    break;
+                case 4:
+                    //Search by first name
+                    break;
+                case 5:
+                    //Search by last name
+                    break;
+                case 6:
+                    //Delete existing contact
+                    break;
             }
         } while(userSelected != 1);
     }
