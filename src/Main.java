@@ -30,7 +30,7 @@ public class Main {
                     System.out.println("Thank you for using Contacts Lister. Goodbye");
                     break;
                 case 2:
-                    //print all contacts
+                    viewContactList();
                     break;
                 case 3:
                     addContact();
@@ -103,6 +103,7 @@ public class Main {
 
         return output;
     }
+
     public static void addContact() {
         boolean keepLooping = true;
         myScanner.nextLine();
@@ -128,5 +129,30 @@ public class Main {
         Contact newContact = new Contact(firstName, lastName, phone, email);
         contactList.add(newContact.toContactString());
         writeFile();
+    }
+
+    public static void viewContactList() {
+        boolean keepLooping = true;
+
+        //viewing function
+        for(String eachContact : contactList){
+            System.out.println(eachContact);
+        }
+
+        do{
+            //create functionality that sets keep looping to false
+            myScanner.nextLine();
+            System.out.println("Input 1 to exit to main menu: \t");
+            try {
+                int viewListQuit = Integer.valueOf(myScanner.next());
+                if(viewListQuit==1){
+                    keepLooping = false;
+                }
+            } catch(Exception e) {
+
+            }
+
+        } while(keepLooping);
+
     }
 }
