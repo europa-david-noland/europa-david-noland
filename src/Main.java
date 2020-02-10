@@ -6,19 +6,26 @@ public class Main {
     //contact list field
     private static Scanner myScanner = new Scanner(System.in);
     private static List<String> contactList = new ArrayList<>();
+
     //main
     public static void main(String[] args) {
-        //Initial tests
-        Contact firstContact = new Contact("Test", "Testerson", "1234567890","test@email.com");
-        Contact secondContact = new Contact("Testy", "Testinez", "0987654321","testinez@email.com");
-        contactList.add(firstContact.toContactString());
-        contactList.add(secondContact.toContactString());
-        System.out.println(contactList);
-        //Initial tests end
-        //Create dir and write
         initContacts();
-        writeFile();
-        //Create dir and write end
+        //Initial tests
+        List<String> currentList = fileToList();
+        if(currentList.size()<2) {
+            Contact firstContact = new Contact("Test", "Testerson", "1234567890", "test@email.com");
+            Contact secondContact = new Contact("Testy", "Testinez", "0987654321", "testinez@email.com");
+            contactList.add(firstContact.toContactString());
+            contactList.add(secondContact.toContactString());
+            System.out.println(contactList);
+
+            writeFile();
+        }
+        //Initial tests end
+
+        //insert sorcery method
+
+        //main menu
         String[] mainMenuArr = new String[] {"Exit.", "View Contacts", "Add a new contact", "Search a contact by first name.", "Search a contact by last name.", "Delete an existing contact."};
         List<String> mainMenuList = new ArrayList<>(Arrays.asList(mainMenuArr));
         int userSelected = Integer.MAX_VALUE;
@@ -79,6 +86,24 @@ public class Main {
         } catch(IOException ioe){
             ioe.printStackTrace();
         }
+    }
+
+    //read file
+    static List<String> fileToList(){
+        List<String> contacts = null;
+
+        try {
+            Path contactsListPath = Paths.get("contacts","contacts.txt");
+            contacts = Files.readAllLines(contactsListPath);
+            //from class example
+//            for (String line : contacts) {
+//                System.out.println(line);
+//            }
+        } catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+
+        return contacts;
     }
 
     public static int selectFromList(List<String> inputList){
