@@ -44,6 +44,8 @@ public class Main {
                 case 6:
                     //Delete existing contact
                     break;
+                default:
+                    break;
             }
         } while(userSelected != 1);
     }
@@ -103,6 +105,7 @@ public class Main {
     }
     public static void addContact() {
         boolean keepLooping = true;
+        myScanner.nextLine();
         System.out.println("Input contact first name: \t");
         String firstName = myScanner.nextLine();
         System.out.println("Input contact last name: \t");
@@ -124,5 +127,6 @@ public class Main {
         } while(keepLooping);
         Contact newContact = new Contact(firstName, lastName, phone, email);
         contactList.add(newContact.toContactString());
+        writeFile();
     }
 }
