@@ -7,6 +7,7 @@ public class Main {
     private static Scanner myScanner = new Scanner(System.in);
     private static List<String> contactList = new ArrayList<>();
     private static List<Contact> contactObjList = new ArrayList<>();
+    private static List<String> repeatAction = new ArrayList<>();
 
     //main
     public static void main(String[] args) {
@@ -30,6 +31,10 @@ public class Main {
         //main menu
         String[] mainMenuArr = new String[] {"Exit.", "View Contacts", "Add a new contact", "Search a contact by first name.", "Search a contact by last name.", "Delete an existing contact."};
         List<String> mainMenuList = new ArrayList<>(Arrays.asList(mainMenuArr));
+
+        repeatAction.add("Exit to main menu.");
+        repeatAction.add("Repeat previous action");
+
         int userSelected = Integer.MAX_VALUE;
         do {
             userSelected = selectFromList(mainMenuList);
@@ -46,9 +51,11 @@ public class Main {
                     break;
                 case 4:
                     //Search by first name
+                    searchFirstName();
                     break;
                 case 5:
                     //Search by last name
+                    searchLastName();
                     break;
                 case 6:
                     //Delete existing contact
@@ -181,6 +188,7 @@ public class Main {
 
         } while(keepLooping);
     }
+
     public static void fileToContactObjs() {
         List<String> myList = fileToList();
         String strList = String.join( ",", myList);
@@ -193,5 +201,78 @@ public class Main {
             contactObjList.add(newContact);
             contactList.add(newContact.toContactString());
         }
+    }
+
+    public static void searchFirstName(){
+        boolean keepLooping = true;
+        do{
+            List<String> bucket = new ArrayList<>();
+
+            myScanner.nextLine();
+            System.out.println("\nEnter your search string: \n");
+            String searchTerm = myScanner.next();
+            myScanner.nextLine();
+
+            for(Contact result : contactObjList){
+                String firstName = result.getfirstName();
+                if(firstName.toLowerCase().contains(searchTerm.toLowerCase())){
+                    bucket.add(result.toContactString());
+                }
+            }
+
+            if(bucket.size()==0){
+                System.out.println("\nNo results found.\n");
+            } else {
+                System.out.println("\nHere are your search results:\n");
+            }
+
+            for(String contents: bucket){
+                System.out.println(contents);
+            }
+            System.out.println("\n");
+
+            int userSelect = selectFromList(repeatAction);
+            if (userSelect==1){
+                keepLooping=false;
+            }
+        }
+        while(keepLooping);
+
+    }
+    public static void searchLastName(){
+        boolean keepLooping = true;
+        do{
+            List<String> bucket = new ArrayList<>();
+
+            myScanner.nextLine();
+            System.out.println("\nEnter your search string: \n");
+            String searchTerm = myScanner.next();
+            myScanner.nextLine();
+
+            for(Contact result : contactObjList){
+                String lastName = result.getlastName();
+                if(lastName.toLowerCase().contains(searchTerm.toLowerCase())){
+                    bucket.add(result.toContactString());
+                }
+            }
+
+            if(bucket.size()==0){
+                System.out.println("\nNo results found.\n");
+            } else {
+                System.out.println("\nHere are your search results:\n");
+            }
+
+            for(String contents: bucket){
+                System.out.println(contents);
+            }
+            System.out.println("\n");
+
+            int userSelect = selectFromList(repeatAction);
+            if (userSelect==1){
+                keepLooping=false;
+            }
+        }
+        while(keepLooping);
+
     }
 }
