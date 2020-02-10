@@ -4,19 +4,39 @@ import java.util.*;
 
 public class Main {
     //contact list field
+    private static Scanner myScanner = new Scanner(System.in);
     private static List<String> contactList = new ArrayList<>();
     //main
     public static void main(String[] args) {
+        //Initial tests
         Contact firstContact = new Contact("Test", "Testerson", "1234567890","test@email.com");
         Contact secondContact = new Contact("Testy", "Testinez", "0987654321","testinez@email.com");
-
-
         contactList.add(firstContact.toContactString());
         contactList.add(secondContact.toContactString());
         System.out.println(contactList);
-
+        //Initial tests end
+        //Create dir and write
         initContacts();
         writeFile();
+        //Create dir and write end
+        String[] mainMenuArr = new String[] {"Exit.", "View Contacts", "Add a new contact", "Search a contact by first name.", "Search a contact by last name.", "Delete an existing contact."};
+        List<String> mainMenuList = new ArrayList<>(Arrays.asList(mainMenuArr));
+        int userSelected = Integer.MAX_VALUE;
+        do {
+            userSelected = selectFromList(mainMenuList);
+            switch(userSelected) {
+                case 1:
+                    userSelected = 1;
+                    System.out.println("Thank you for using Contacts Lister. Goodbye");
+                    break;
+                case 2:
+                    //print all contacts
+                    break;
+                case 3:
+
+
+            }
+        } while(userSelected != 1);
     }
 
     //check for and create initial contacts file
@@ -24,7 +44,6 @@ public class Main {
         String directory = "contacts";
         String filename = "contacts.txt";
         Path contactsDirectory= Paths.get(directory);
-//        System.out.println(contactsDirectory.toAbsolutePath());
         Path contactsFile = Paths.get(directory, filename);
 
         try {
@@ -43,7 +62,6 @@ public class Main {
 
     //generic write method (take list and write)
     static void writeFile(){
-
         try{
             Path contactsListPath = Paths.get("contacts","contacts.txt");
             Files.write(contactsListPath, contactList);
@@ -52,7 +70,50 @@ public class Main {
         }
     }
 
-    public int list(List<String> inputList){
+    public static int selectFromList(List<String> inputList){
+        int output = Integer.MAX_VALUE;
+        boolean keepLooping = true;
+        do {
+            int counter = 1;
+            for(String option : inputList) {
+                System.out.println(counter + ". " + option);
+                counter++;
+            }
+            System.out.print("Select an option by inputting the corresponding integer: \t");
+            try {
+                output = Integer.valueOf(myScanner.next());
+                if (output <= counter && output > 0) {
+                    keepLooping = false;
+                }
+            } catch(Exception e) {
+                System.out.println("Invalid input.");
+            }
+        } while(keepLooping);
 
+        return output;
+    }
+    public static void addContact() {
+        boolean keepLooping = true;
+        System.out.println("Input contact first name: \t");
+        String firstName = myScanner.nextLine();
+        System.out.println("Input contact last name: \t");
+        String lastName = myScanner.nextLine();
+        System.out.println("Input contact email: \t");
+        String email = myScanner.nextLine();
+        String phone = "";
+        do {
+            System.out.println("Input contact ten digit phone number without any special characters: \t");
+            try {
+                int phoneNumber = Integer.valueOf(myScanner.next());
+                if(Integer.toString(phoneNumber).length() == 10) {
+                    keepLooping = false;
+                    phone = Integer.toString(phoneNumber);
+                }
+            } catch(Exception e) {
+                System.out.println("Invalid input.");
+            }
+        } while(keepLooping);
+        Contact newContact = new Contact(firstName, lastName, phone, email);
+        contactList.add(newContact.toContactString());
     }
 }
