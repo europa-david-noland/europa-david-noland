@@ -6,6 +6,7 @@ public class Main {
     //contact list field
     private static Scanner myScanner = new Scanner(System.in);
     private static List<String> contactList = new ArrayList<>();
+    private static List<Contact> contactObjList = new ArrayList<>();
 
     //main
     public static void main(String[] args) {
@@ -24,7 +25,8 @@ public class Main {
         //Initial tests end
 
         //insert sorcery method
-
+        fileToContactObjs();
+        System.out.println(contactList.toString());
         //main menu
         String[] mainMenuArr = new String[] {"Exit.", "View Contacts", "Add a new contact", "Search a contact by first name.", "Search a contact by last name.", "Delete an existing contact."};
         List<String> mainMenuList = new ArrayList<>(Arrays.asList(mainMenuArr));
@@ -142,10 +144,10 @@ public class Main {
         do {
             System.out.println("Input contact ten digit phone number without any special characters: \t");
             try {
-                int phoneNumber = Integer.valueOf(myScanner.next());
-                if(Integer.toString(phoneNumber).length() == 10) {
+                long phoneNumber = Long.valueOf(myScanner.next());
+                if(Long.toString(phoneNumber).length() == 10) {
                     keepLooping = false;
-                    phone = Integer.toString(phoneNumber);
+                    phone = Long.toString(phoneNumber);
                 }
             } catch(Exception e) {
                 System.out.println("Invalid input.");
@@ -178,6 +180,18 @@ public class Main {
             }
 
         } while(keepLooping);
-
+    }
+    public static void fileToContactObjs() {
+        List<String> myList = fileToList();
+        String strList = String.join( ",", myList);
+        String[] strArr = strList.split(",");
+        for(String contact : strArr) {
+            contact = contact.replace("|", "&");
+            String[] contactElems = contact.split("&");
+            String[] nameArr = contactElems[0].split(" ");
+            Contact newContact = new Contact(nameArr[0].trim(), nameArr[1].trim(), contactElems[1], contactElems[2]);
+            contactObjList.add(newContact);
+            contactList.add(newContact.toContactString());
+        }
     }
 }
