@@ -385,8 +385,8 @@ public class Main {
                     List<String> firstStrList = new ArrayList<>(firstMap.keySet());
                     System.out.println("Which would you like to delete?");
                     int firstSelection = selectFromList(firstStrList);
-                    int index = firstSelection - 1;
-                    long firstDeleteId = firstMap.get(firstStrList.get(index));
+                    int indexFirst = firstSelection - 1;
+                    long firstDeleteId = firstMap.get(firstStrList.get(indexFirst));
                     deleteContactObj(firstDeleteId);
                     writeFile();
                     break;
@@ -396,14 +396,32 @@ public class Main {
                     List<String> lastStrList = new ArrayList<>(lastMap.keySet());
                     System.out.println("Which would you like to delete?");
                     int lastSelection = selectFromList(lastStrList);
-                    long lastDeleteId = lastMap.get(lastStrList.get(lastSelection));
+                    int indexLast = lastSelection - 1;
+                    long lastDeleteId = lastMap.get(lastStrList.get(indexLast));
                     deleteContactObj(lastDeleteId);
+                    writeFile();
                     break;
                 case 3:
                     //By phone
+                    Map<String, Long> phoneMap = searchPhone();
+                    List<String> phoneStrList = new ArrayList<>(phoneMap.keySet());
+                    System.out.println("Which would you like to delete?");
+                    int phoneSelection = selectFromList(phoneStrList);
+                    int indexPhone = phoneSelection - 1;
+                    long phoneDeleteId = phoneMap.get(phoneStrList.get(indexPhone));
+                    deleteContactObj(phoneDeleteId);
+                    writeFile();
                     break;
                 case 4:
                     //By email
+                    Map<String, Long> emailMap = searchEmail();
+                    List<String> emailStrList = new ArrayList<>(emailMap.keySet());
+                    System.out.println("Which would you like to delete?");
+                    int emailSelection = selectFromList(emailStrList);
+                    int indexEmail = emailSelection - 1;
+                    long emailDeleteId = emailMap.get(emailStrList.get(indexEmail));
+                    deleteContactObj(emailDeleteId);
+                    writeFile();
                     break;
                 default:
                     break;
@@ -429,9 +447,7 @@ public class Main {
         contactObjList.remove(deleteMe);
         for(Contact contactObj : contactObjList) {
             contactList.add(contactObj.toContactString());
-            System.out.println(contactObj.toContactString() + " added");
         }
-        System.out.println(contactObjList);
     }
     //END DELETE CONTACT OBJ (CALLED IN DELETE MAIN)
 }
