@@ -43,35 +43,35 @@ public class Main {
         fileToContactObjs();
         //End reads the contacts.txt converts each line into its own Contact obj
         //Run the program
-//        int userSelected = Integer.MAX_VALUE;
-//        do {
-//            userSelected = selectFromList(mainMenuList);
-//            switch(userSelected) {
-//                case 1:
-//                    userSelected = 1;
-//                    System.out.println("Thank you for using Contacts Lister. Goodbye");
-//                    break;
-//                case 2:
-//                    viewContactList();
-//                    break;
-//                case 3:
-//                    addContact();
-//                    break;
-//                case 4:
-//                    //Search by first name
-//                    searchFirstName();
-//                    break;
-//                case 5:
-//                    //Search by last name
-//                    searchLastName();
-//                    break;
-//                case 6:
-//                    //Delete existing contact
-//                    break;
-//                default:
-//                    break;
-//            }
-//        } while(userSelected != 1);
+        int userSelected = Integer.MAX_VALUE;
+        do {
+            userSelected = selectFromList(mainMenuList);
+            switch(userSelected) {
+                case 1:
+                    userSelected = 1;
+                    System.out.println("Thank you for using Contacts Lister. Goodbye");
+                    break;
+                case 2:
+                    viewContactList();
+                    break;
+                case 3:
+                    addContact();
+                    break;
+                case 4:
+                    //Search by first name
+                    searchFirstName();
+                    break;
+                case 5:
+                    //Search by last name
+                    searchLastName();
+                    break;
+                case 6:
+                    //Delete existing contact
+                    break;
+                default:
+                    break;
+            }
+        } while(userSelected != 1);
         System.out.println(contactList);
     }
     //End run the program
@@ -200,13 +200,11 @@ public class Main {
         }
     }
 
-    public static List<Integer> searchFirstName(){
+    public static Map<String, Long> searchFirstName(){
         boolean keepLooping = true;
-        List<String> bucket;
-        List<Integer> idList;
+        Map<String, Long> outputMap;
         do{
-            bucket = new ArrayList<>();
-            idList = new ArrayList<>();
+            outputMap = new HashMap<>();
             myScanner.nextLine();
             System.out.println("\nEnter your search string: \n");
             String searchTerm = myScanner.next();
@@ -215,32 +213,30 @@ public class Main {
             for(Contact result : contactObjList){
                 String firstName = result.getFirstName();
                 if(firstName.toLowerCase().contains(searchTerm.toLowerCase())){
-                    bucket.add(result.toContactString());
+                    outputMap.put(result.toContactString(), result.getId());
                 }
             }
-            if(bucket.size() == 0){
+            if(outputMap.size() == 0){
                 System.out.println("\nNo results found.\n");
             } else {
                 System.out.println("\nHere are your search results:\n");
             }
-
-            for(String contents: bucket){
-                System.out.println(contents);
+            for(Map.Entry<String, Long> entry : outputMap.entrySet()){
+                System.out.println(entry.getKey());
             }
             System.out.println("\n");
-
             int userSelect = selectFromList(repeatAction);
             if (userSelect==1){
                 keepLooping=false;
             }
         }
         while(keepLooping);
-        return idList;
+        return outputMap;
     }
-    public static List<Integer> searchLastName(){
+    public static List<String> searchLastName(){
         boolean keepLooping = true;
         List<String> bucket;
-        List<Integer> idList;
+        List<String> idList;
         do{
             bucket = new ArrayList<>();
             idList = new ArrayList<>();
@@ -248,11 +244,11 @@ public class Main {
             System.out.println("\nEnter your search string: \n");
             String searchTerm = myScanner.next();
             myScanner.nextLine();
-
             for(Contact result : contactObjList){
                 String lastName = result.getLastName();
                 if(lastName.toLowerCase().contains(searchTerm.toLowerCase())){
                     bucket.add(result.toContactString());
+                    idList.add(Long.toString(result.getId()));
                 }
             }
             if(bucket.size() == 0 ){
@@ -272,34 +268,38 @@ public class Main {
             }
         }
         while(keepLooping);
-        return idList;
+        bucket.addAll(idList);
+        return bucket;
     }
-    public static void deleteContact(){
-        boolean keepLooping = true;
-        do{
-            myScanner.nextLine();
-            int userSelected = selectFromList(crudParamOptions);
-            switch(userSelected) {
-                case 1:
-                    //By first name
-                    break;
-                case 2:
-                    //By last name
-                    break;
-                case 3:
-                    //By phone
-                    break;
-                case 4:
-                    //By email
-                    break;
-                default:
-                    break;
-            }
-            int userContinue = selectFromList(repeatAction);
-            if (userContinue == 1){
-                keepLooping=false;
-            }
-        }
-        while(keepLooping);
-    }
+//    public static void deleteContact(){
+//        boolean keepLooping = true;
+//        do{
+//            myScanner.nextLine();
+//            int userSelected = selectFromList(crudParamOptions);
+//            switch(userSelected) {
+//                case 1:
+//                    //By first name
+//                    List<String> idList = searchFirstName();
+//                    System.out.println("Which would you like to delete?");
+//                    int userSelection = selectFromList(idList);
+//                    break;
+//                case 2:
+//                    //By last name
+//                    break;
+//                case 3:
+//                    //By phone
+//                    break;
+//                case 4:
+//                    //By email
+//                    break;
+//                default:
+//                    break;
+//            }
+//            int userContinue = selectFromList(repeatAction);
+//            if (userContinue == 1){
+//                keepLooping=false;
+//            }
+//        }
+//        while(keepLooping);
+//    }
 }

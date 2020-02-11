@@ -37,6 +37,9 @@ public class Contact {
     //End email
     //ID for CRUD
     private long id;
+    public long getId() {
+        return this.id;
+    }
     //End ID for CRUD
     //Constructor
     Contact(String firstName, String lastName, String phone, String email){
