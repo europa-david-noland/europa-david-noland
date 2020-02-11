@@ -22,12 +22,15 @@ public class Main {
         //Prob whack code but it doesnt work with only if so I improvised.
         try {
             List<String> contactList = fileToList();
+            System.out.println("In try.");
+            System.out.println(contactList);
         } catch (Exception e) {
             Contact firstContact = new Contact("Alice", "Smith", "1234567890", "jSMITH@email.com");
             Contact secondContact = new Contact("Alice", "Holmes", "0987654321", "aliceisholmes@email.com");
             contactList.add(firstContact.toContactString());
             contactList.add(secondContact.toContactString());
             writeFile();
+            System.out.println("In catch.");
         }
         if(contactList.size() <= 0) {
             Contact firstContact = new Contact("Alice", "Smith", "1234567890", "jSMITH@email.com");
@@ -35,6 +38,7 @@ public class Main {
             contactList.add(firstContact.toContactString());
             contactList.add(secondContact.toContactString());
             writeFile();
+            System.out.println("In if.");
         }
         //End initial tests
 
@@ -113,6 +117,7 @@ public class Main {
         try {
             Path contactsListPath = Paths.get("contacts","contacts.txt");
             contacts = Files.readAllLines(contactsListPath);
+            System.out.println("Line 120. " + contacts);
         } catch (IOException ioe){
             ioe.printStackTrace();
         }
