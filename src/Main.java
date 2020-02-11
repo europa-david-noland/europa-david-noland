@@ -16,7 +16,7 @@ public class Main {
         initContacts();
         //Main menu and repeat action lists initialized
         mainMenuList = Arrays.asList("Exit.", "View Contacts", "Add a new contact", "Search a contact by first name.", "Search a contact by last name.", "Delete an existing contact.");
-        repeatAction = Arrays.asList("Exit to main menu.", "Repeat previous action.");
+        repeatAction = Arrays.asList("Continue.", "Repeat previous action.");
         crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email");
         //End main menu, repeat action, and crud param options lists initialized
         //Check if file is blank. If so make dir and file. Then write to file.
@@ -67,6 +67,7 @@ public class Main {
                     break;
                 case 6:
                     //Delete existing contact
+                    deleteContact();
                     break;
                 default:
                     break;
@@ -233,73 +234,114 @@ public class Main {
         while(keepLooping);
         return outputMap;
     }
-    public static List<String> searchLastName(){
+    public static Map<String, Long> searchLastName(){
         boolean keepLooping = true;
-        List<String> bucket;
-        List<String> idList;
+        Map<String, Long> outputMap;
         do{
-            bucket = new ArrayList<>();
-            idList = new ArrayList<>();
+            outputMap = new HashMap<>();
             myScanner.nextLine();
             System.out.println("\nEnter your search string: \n");
             String searchTerm = myScanner.next();
             myScanner.nextLine();
+
             for(Contact result : contactObjList){
                 String lastName = result.getLastName();
                 if(lastName.toLowerCase().contains(searchTerm.toLowerCase())){
-                    bucket.add(result.toContactString());
-                    idList.add(Long.toString(result.getId()));
+                    outputMap.put(result.toContactString(), result.getId());
                 }
             }
-            if(bucket.size() == 0 ){
+            if(outputMap.size() == 0){
                 System.out.println("\nNo results found.\n");
             } else {
                 System.out.println("\nHere are your search results:\n");
             }
-
-            for(String contents: bucket){
-                System.out.println(contents);
+            for(Map.Entry<String, Long> entry : outputMap.entrySet()){
+                System.out.println(entry.getKey());
             }
             System.out.println("\n");
-
             int userSelect = selectFromList(repeatAction);
             if (userSelect==1){
                 keepLooping=false;
             }
         }
         while(keepLooping);
-        bucket.addAll(idList);
-        return bucket;
+        return outputMap;
     }
-//    public static void deleteContact(){
+//
+//    //saved as a fallback until testing commplete
+//    public static List<String> searchLastName(){
 //        boolean keepLooping = true;
+//        List<String> bucket;
+//        List<String> idList;
 //        do{
+//            bucket = new ArrayList<>();
+//            idList = new ArrayList<>();
 //            myScanner.nextLine();
-//            int userSelected = selectFromList(crudParamOptions);
-//            switch(userSelected) {
-//                case 1:
-//                    //By first name
-//                    List<String> idList = searchFirstName();
-//                    System.out.println("Which would you like to delete?");
-//                    int userSelection = selectFromList(idList);
-//                    break;
-//                case 2:
-//                    //By last name
-//                    break;
-//                case 3:
-//                    //By phone
-//                    break;
-//                case 4:
-//                    //By email
-//                    break;
-//                default:
-//                    break;
+//            System.out.println("\nEnter your search string: \n");
+//            String searchTerm = myScanner.next();
+//            myScanner.nextLine();
+//            for(Contact result : contactObjList){
+//                String lastName = result.getLastName();
+//                if(lastName.toLowerCase().contains(searchTerm.toLowerCase())){
+//                    bucket.add(result.toContactString());
+//                    idList.add(Long.toString(result.getId()));
+//                }
 //            }
-//            int userContinue = selectFromList(repeatAction);
-//            if (userContinue == 1){
+//            if(bucket.size() == 0 ){
+//                System.out.println("\nNo results found.\n");
+//            } else {
+//                System.out.println("\nHere are your search results:\n");
+//            }
+//
+//            for(String contents: bucket){
+//                System.out.println(contents);
+//            }
+//            System.out.println("\n");
+//
+//            int userSelect = selectFromList(repeatAction);
+//            if (userSelect==1){
 //                keepLooping=false;
 //            }
 //        }
 //        while(keepLooping);
+//        bucket.addAll(idList);
+//        return bucket;
 //    }
+    public static void deleteContact(){
+        boolean keepLooping = true;
+        do{
+            myScanner.nextLine();
+            int userSelected = selectFromList(crudParamOptions);
+            switch(userSelected) {
+                case 1:
+                    //By first name
+                    Map<String, Long> firstMap = searchFirstName();
+                    List<String> firstStrList = new ArrayList<>(firstMap.keySet());
+                    System.out.println("Which would you like to delete?");
+                    int firstSelection = selectFromList(firstStrList);
+                    long deleteThis = firstMap.get(firstStrList.get(firstSelection));
+                    break;
+                case 2:
+                    //By last name
+                    Map<String, Long> lastMap = searchLastName();
+                    List<String> lastStrList = new ArrayList<>(lastMap.keySet());
+                    System.out.println("Which would you like to delete?");
+                    int lastSelection = selectFromList(lastStrList);
+                    break;
+                case 3:
+                    //By phone
+                    break;
+                case 4:
+                    //By email
+                    break;
+                default:
+                    break;
+            }
+            int userContinue = selectFromList(repeatAction);
+            if (userContinue == 1){
+                keepLooping=false;
+            }
+        }
+        while(keepLooping);
+    }
 }
