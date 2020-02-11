@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         initContacts();
         //MAIN MENU, REPEAT ACTION AND CRUD PARAM LISTS INIT
-        mainMenuList = Arrays.asList("Exit.", "View Contacts.", "Add a new contact.", "Search a contact.", "Delete an existing contact.\n__");
+        mainMenuList = Arrays.asList("Exit.", "View Contacts.", "Add a new contact.", "Search a contact.", "Delete an existing contact.\n");
         repeatAction = Arrays.asList("Continue.", "Repeat previous action.\n__");
         crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email\n__");
         //END MAIN MENU, REPEAT ACTION AND CRUD PARAM LISTS INIT
@@ -145,10 +145,12 @@ public class Main {
         boolean keepLooping = true;
         do {
             int counter = 1;
+            System.out.println("----------------------------------------\n");
             for(String option : inputList) {
-                System.out.println(counter + ". " + option);
+                System.out.println("\t" + counter + ". " + option);
                 counter++;
             }
+            System.out.println("----------------------------------------\n");
             System.out.print("Select an option by inputting the corresponding integer: \t");
             try {
                 output = Integer.valueOf(myScanner.next());
