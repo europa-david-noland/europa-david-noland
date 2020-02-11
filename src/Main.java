@@ -100,7 +100,6 @@ public class Main {
         try {
             Path contactsListPath = Paths.get("contacts","contacts.txt");
             contacts = Files.readAllLines(contactsListPath);
-            System.out.println("Line 120. " + contacts);
         } catch (IOException ioe){
             ioe.printStackTrace();
         }
