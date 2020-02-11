@@ -8,33 +8,31 @@ public class Main {
     private static List<String> contactList = new ArrayList<>();
     private static List<Contact> contactObjList = new ArrayList<>();
     private static List<String> repeatAction = new ArrayList<>();
-
+    private static List<String> mainMenuList = new ArrayList<>();
+    private static List<String> crudParamOptions = new ArrayList<>();
     //main
     public static void main(String[] args) {
         initContacts();
-        //Initial tests
-        List<String> currentList = fileToList();
-        if(currentList.size()<2) {
+        //Main menu and repeat action lists initialized
+        mainMenuList = Arrays.asList("Exit.", "View Contacts", "Add a new contact", "Search a contact by first name.", "Search a contact by last name.", "Delete an existing contact.");
+        repeatAction = Arrays.asList("Exit to main menu.", "Repeat previous action.");
+        crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email");
+        //End main menu, repeat action, and crud param options lists initialized
+        //Check if file is blank. If so make dir and file. Then write to file.
+        List<String> contactList = fileToList();
+        if(contactList.size()<2) {
             Contact firstContact = new Contact("Test", "Testerson", "1234567890", "test@email.com");
             Contact secondContact = new Contact("Testy", "Testinez", "0987654321", "testinez@email.com");
             contactList.add(firstContact.toContactString());
             contactList.add(secondContact.toContactString());
-            System.out.println(contactList);
-
             writeFile();
         }
-        //Initial tests end
+        //End initial tests
 
-        //insert sorcery method
+        //Reads the contacts.txt converts each line into its own Contact obj
         fileToContactObjs();
-        System.out.println(contactList.toString());
-        //main menu
-        String[] mainMenuArr = new String[] {"Exit.", "View Contacts", "Add a new contact", "Search a contact by first name.", "Search a contact by last name.", "Delete an existing contact."};
-        List<String> mainMenuList = new ArrayList<>(Arrays.asList(mainMenuArr));
-
-        repeatAction.add("Exit to main menu.");
-        repeatAction.add("Repeat previous action");
-
+        //End reads the contacts.txt converts each line into its own Contact obj
+        //Run the program
         int userSelected = Integer.MAX_VALUE;
         do {
             userSelected = selectFromList(mainMenuList);
@@ -65,7 +63,7 @@ public class Main {
             }
         } while(userSelected != 1);
     }
-
+    //End run the program
     //check for and create initial contacts file
     static void initContacts(){
         String directory = "contacts";
@@ -97,21 +95,15 @@ public class Main {
         }
     }
 
-    //read file
+    //read file to list
     static List<String> fileToList(){
         List<String> contacts = null;
-
         try {
             Path contactsListPath = Paths.get("contacts","contacts.txt");
             contacts = Files.readAllLines(contactsListPath);
-            //from class example
-//            for (String line : contacts) {
-//                System.out.println(line);
-//            }
         } catch (IOException ioe){
             ioe.printStackTrace();
         }
-
         return contacts;
     }
 
@@ -167,25 +159,19 @@ public class Main {
 
     public static void viewContactList() {
         boolean keepLooping = true;
-
-        //viewing function
-        for(String eachContact : contactList){
-            System.out.println(eachContact);
-        }
-
         do{
+            //viewing function
+            for(String eachContact : contactList){
+                System.out.println(eachContact);
+            }
             //create functionality that sets keep looping to false
             myScanner.nextLine();
-            System.out.println("Input 1 to exit to main menu: \t");
             try {
-                int viewListQuit = Integer.valueOf(myScanner.next());
-                if(viewListQuit==1){
+                int userSelect = selectFromList(repeatAction);
+                if(userSelect == 1){
                     keepLooping = false;
                 }
-            } catch(Exception e) {
-
-            }
-
+            } catch(Exception ignored) {}
         } while(keepLooping);
     }
 
@@ -255,8 +241,7 @@ public class Main {
                     bucket.add(result.toContactString());
                 }
             }
-
-            if(bucket.size()==0){
+            if(bucket.size() == 0 ){
                 System.out.println("\nNo results found.\n");
             } else {
                 System.out.println("\nHere are your search results:\n");
@@ -273,6 +258,30 @@ public class Main {
             }
         }
         while(keepLooping);
-
+    }
+    public static void deleteContact(){
+        boolean keepLooping = true;
+        do{
+            myScanner.nextLine();
+            int userSelected = selectFromList(crudParamOptions);
+            switch(userSelected) {
+                case 1:
+                    //do thing
+                    break;
+                case 2:
+                    //do thing
+                    break;
+                case 3:
+                    //do thing
+                    break;
+                case 4:
+                    //do thing
+            }
+            int userContinue = selectFromList(repeatAction);
+            if (userContinue == 1){
+                keepLooping=false;
+            }
+        }
+        while(keepLooping);
     }
 }
