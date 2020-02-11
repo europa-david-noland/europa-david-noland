@@ -15,8 +15,8 @@ public class Main {
         initContacts();
         //MAIN MENU, REPEAT ACTION AND CRUD PARAM LISTS INIT
         mainMenuList = Arrays.asList("Exit.", "View Contacts.", "Add a new contact.", "Search a contact.", "Delete an existing contact.\n");
-        repeatAction = Arrays.asList("Continue.", "Repeat previous action.\n__");
-        crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email\n__");
+        repeatAction = Arrays.asList("Continue.", "Repeat previous action.\n");
+        crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email\n");
         //END MAIN MENU, REPEAT ACTION AND CRUD PARAM LISTS INIT
         //
         //TURN CONTACTS.TXT TO STRING LIST.
