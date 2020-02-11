@@ -368,7 +368,6 @@ public class Main {
             if (userContinue == 1){
                 keepLooping=false;
             }
-        }
-        while(keepLooping);
+        } while(keepLooping);
     }
 }
