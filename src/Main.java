@@ -19,7 +19,16 @@ public class Main {
         crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email");
         //End main menu, repeat action, and crud param options lists initialized
         //Check if file is blank. If so make dir and file. Then write to file.
-        List<String> contactList = fileToList();
+        //Prob whack code but it doesnt work with only if so I improvised.
+        try {
+            List<String> contactList = fileToList();
+        } catch (Exception e) {
+            Contact firstContact = new Contact("Test", "Testerson", "1234567890", "test@email.com");
+            Contact secondContact = new Contact("Testy", "Testinez", "0987654321", "testinez@email.com");
+            contactList.add(firstContact.toContactString());
+            contactList.add(secondContact.toContactString());
+            writeFile();
+        }
         if(contactList.size()<2) {
             Contact firstContact = new Contact("Test", "Testerson", "1234567890", "test@email.com");
             Contact secondContact = new Contact("Testy", "Testinez", "0987654321", "testinez@email.com");
@@ -33,35 +42,36 @@ public class Main {
         fileToContactObjs();
         //End reads the contacts.txt converts each line into its own Contact obj
         //Run the program
-        int userSelected = Integer.MAX_VALUE;
-        do {
-            userSelected = selectFromList(mainMenuList);
-            switch(userSelected) {
-                case 1:
-                    userSelected = 1;
-                    System.out.println("Thank you for using Contacts Lister. Goodbye");
-                    break;
-                case 2:
-                    viewContactList();
-                    break;
-                case 3:
-                    addContact();
-                    break;
-                case 4:
-                    //Search by first name
-                    searchFirstName();
-                    break;
-                case 5:
-                    //Search by last name
-                    searchLastName();
-                    break;
-                case 6:
-                    //Delete existing contact
-                    break;
-                default:
-                    break;
-            }
-        } while(userSelected != 1);
+//        int userSelected = Integer.MAX_VALUE;
+//        do {
+//            userSelected = selectFromList(mainMenuList);
+//            switch(userSelected) {
+//                case 1:
+//                    userSelected = 1;
+//                    System.out.println("Thank you for using Contacts Lister. Goodbye");
+//                    break;
+//                case 2:
+//                    viewContactList();
+//                    break;
+//                case 3:
+//                    addContact();
+//                    break;
+//                case 4:
+//                    //Search by first name
+//                    searchFirstName();
+//                    break;
+//                case 5:
+//                    //Search by last name
+//                    searchLastName();
+//                    break;
+//                case 6:
+//                    //Delete existing contact
+//                    break;
+//                default:
+//                    break;
+//            }
+//        } while(userSelected != 1);
+        System.out.println(contactList);
     }
     //End run the program
     //check for and create initial contacts file
@@ -70,7 +80,6 @@ public class Main {
         String filename = "contacts.txt";
         Path contactsDirectory= Paths.get(directory);
         Path contactsFile = Paths.get(directory, filename);
-
         try {
             if (Files.notExists(contactsDirectory)) {
                 Files.createDirectories((contactsDirectory));
@@ -185,7 +194,8 @@ public class Main {
             String[] nameArr = contactElems[0].split(" ");
             Contact newContact = new Contact(nameArr[0].trim(), nameArr[1].trim(), contactElems[1], contactElems[2]);
             contactObjList.add(newContact);
-            contactList.add(newContact.toContactString());
+            //BELOW WAS CAUSING DOUBLE DATA IN TERM BUT NOT .TXT
+//            contactList.add(newContact.toContactString());
         }
     }
 
@@ -200,7 +210,7 @@ public class Main {
             myScanner.nextLine();
 
             for(Contact result : contactObjList){
-                String firstName = result.getfirstName();
+                String firstName = result.getFirstName();
                 if(firstName.toLowerCase().contains(searchTerm.toLowerCase())){
                     bucket.add(result.toContactString());
                 }
@@ -236,7 +246,7 @@ public class Main {
             myScanner.nextLine();
 
             for(Contact result : contactObjList){
-                String lastName = result.getlastName();
+                String lastName = result.getLastName();
                 if(lastName.toLowerCase().contains(searchTerm.toLowerCase())){
                     bucket.add(result.toContactString());
                 }
