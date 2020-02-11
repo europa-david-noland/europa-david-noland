@@ -146,15 +146,15 @@ public class Main {
         do {
             int counter = 1;
 //            System.out.printf("*----------------------------------------*\n|%40s|","");
-            System.out.printf("**-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-**\n||%39s||","");
+            System.out.printf("**-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-****-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-**\n||%82s||","");
 
             for(String option : inputList) {
-                System.out.printf("\n||\t" + counter + ". " +  "%-33s ||" +"", option);
+                System.out.printf("\n||\t" + counter + ". " +  "%-76s ||" +"", option);
                 counter++;
             }
-            System.out.printf("\n||%39s||","");
+            System.out.printf("\n||%82s||","");
 //            System.out.printf("\n*----------------------------------------*\n","");
-            System.out.printf("\n**=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=**\n","");
+            System.out.printf("\n**=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=****-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-**\n","");
 
             System.out.println("Select an option by inputting the corresponding integer: \t");
             try {
@@ -176,6 +176,8 @@ public class Main {
         boolean keepLooping = true;
         do{
             //viewing function
+            System.out.printf("Name%-15s  Phone%-9s Email\n","","","");
+            System.out.println("______________________________________________________________________________________");
             for(String eachContact : contactList){
                 System.out.println(eachContact);
             }
