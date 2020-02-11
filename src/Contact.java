@@ -36,6 +36,7 @@ public class Contact {
     }
     //End email
     //ID for CRUD
+    private static long counter = -1;
     private long id;
     public long getId() {
         return this.id;
@@ -47,7 +48,8 @@ public class Contact {
         this.lastName = lastName;
         this.phone = phone;
         this.email = email;
-        this.id = ++id;
+        this.id = counter;
+        counter++;
     }
     //End constructor
     //Use on object before adding to contactList then writing to file. (Write takes String object) Changing the format of this will crash the app

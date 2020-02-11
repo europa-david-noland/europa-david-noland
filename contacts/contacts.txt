@@ -1,2 +1,1 @@
-Test Testerson | 1234567890 | test@email.com
-Testy Testinez | 0987654321 | testinez@email.com
+Alice Holmes |  0987654321  |  aliceisholmes@email.com

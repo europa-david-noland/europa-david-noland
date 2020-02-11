@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.*;
 import java.util.*;
 
@@ -24,15 +23,15 @@ public class Main {
         try {
             List<String> contactList = fileToList();
         } catch (Exception e) {
-            Contact firstContact = new Contact("Test", "Testerson", "1234567890", "test@email.com");
-            Contact secondContact = new Contact("Testy", "Testinez", "0987654321", "testinez@email.com");
+            Contact firstContact = new Contact("Alice", "Smith", "1234567890", "jSMITH@email.com");
+            Contact secondContact = new Contact("Alice", "Holmes", "0987654321", "aliceisholmes@email.com");
             contactList.add(firstContact.toContactString());
             contactList.add(secondContact.toContactString());
             writeFile();
         }
-        if(contactList.size()<2) {
-            Contact firstContact = new Contact("Test", "Testerson", "1234567890", "test@email.com");
-            Contact secondContact = new Contact("Testy", "Testinez", "0987654321", "testinez@email.com");
+        if(contactList.size() <= 0) {
+            Contact firstContact = new Contact("Alice", "Smith", "1234567890", "jSMITH@email.com");
+            Contact secondContact = new Contact("Alice", "Holmes", "0987654321", "aliceisholmes@email.com");
             contactList.add(firstContact.toContactString());
             contactList.add(secondContact.toContactString());
             writeFile();
@@ -67,13 +66,13 @@ public class Main {
                     break;
                 case 6:
                     //Delete existing contact
-                    deleteContact();
+                    deleteContactFromFile();
                     break;
                 default:
                     break;
             }
         } while(userSelected != 1);
-        System.out.println(contactList);
+
     }
     //End run the program
     //check for and create initial contacts file
@@ -104,6 +103,8 @@ public class Main {
         } catch(IOException ioe){
             ioe.printStackTrace();
         }
+        //refreshes list of Contact objs
+//        fileToContactObjs();
     }
 
     //read file to list
@@ -185,8 +186,10 @@ public class Main {
             } catch(Exception ignored) {}
         } while(keepLooping);
     }
-
+    //TODO FIX THIS TO WORK WITH DELETE
     public static void fileToContactObjs() {
+        //new and untested
+        contactObjList.clear();
         List<String> myList = fileToList();
         String strList = String.join( ",", myList);
         String[] strArr = strList.split(",");
@@ -194,6 +197,7 @@ public class Main {
             contact = contact.replace("|", "&");
             String[] contactElems = contact.split("&");
             String[] nameArr = contactElems[0].split(" ");
+            //ArrayIndexOutOfBoundsException below.
             Contact newContact = new Contact(nameArr[0].trim(), nameArr[1].trim(), contactElems[1], contactElems[2]);
             contactObjList.add(newContact);
             //BELOW WAS CAUSING DOUBLE DATA IN TERM BUT NOT .TXT
@@ -243,7 +247,6 @@ public class Main {
             System.out.println("\nEnter your search string: \n");
             String searchTerm = myScanner.next();
             myScanner.nextLine();
-
             for(Contact result : contactObjList){
                 String lastName = result.getLastName();
                 if(lastName.toLowerCase().contains(searchTerm.toLowerCase())){
@@ -307,7 +310,25 @@ public class Main {
 //        bucket.addAll(idList);
 //        return bucket;
 //    }
-    public static void deleteContact(){
+    public static void deleteContactObj(long id) {
+//        contactList = new ArrayList<>();
+        System.out.println(id);
+        contactList.clear();
+        Contact deleteMe = null;
+        for(Contact contact : contactObjList) {
+            if(contact.getId() == id) {
+                deleteMe = contact;
+            }
+        }
+        System.out.println(deleteMe.toContactString());
+        contactObjList.remove(deleteMe);
+        for(Contact contactObj : contactObjList) {
+            contactList.add(contactObj.toContactString());
+            System.out.println(contactObj.toContactString() + " added");
+        }
+        System.out.println(contactObjList);
+    }
+    public static void deleteContactFromFile() {
         boolean keepLooping = true;
         do{
             myScanner.nextLine();
@@ -319,7 +340,10 @@ public class Main {
                     List<String> firstStrList = new ArrayList<>(firstMap.keySet());
                     System.out.println("Which would you like to delete?");
                     int firstSelection = selectFromList(firstStrList);
-                    long deleteThis = firstMap.get(firstStrList.get(firstSelection));
+                    int index = firstSelection - 1;
+                    long firstDeleteId = firstMap.get(firstStrList.get(index));
+                    deleteContactObj(firstDeleteId);
+                    writeFile();
                     break;
                 case 2:
                     //By last name
@@ -327,6 +351,8 @@ public class Main {
                     List<String> lastStrList = new ArrayList<>(lastMap.keySet());
                     System.out.println("Which would you like to delete?");
                     int lastSelection = selectFromList(lastStrList);
+                    long lastDeleteId = lastMap.get(lastStrList.get(lastSelection));
+                    deleteContactObj(lastDeleteId);
                     break;
                 case 3:
                     //By phone
