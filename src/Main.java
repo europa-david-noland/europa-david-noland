@@ -14,9 +14,9 @@ public class Main {
     public static void main(String[] args) {
         initContacts();
         //MAIN MENU, REPEAT ACTION AND CRUD PARAM LISTS INIT
-        mainMenuList = Arrays.asList("Exit.", "View Contacts.", "Add a new contact.", "Search a contact.", "Delete an existing contact.\n");
-        repeatAction = Arrays.asList("Continue.", "Repeat previous action.\n");
-        crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email\n");
+        mainMenuList = Arrays.asList("Exit.", "View Contacts.", "Add a new contact.", "Search a contact.", "Delete an existing contact.");
+        repeatAction = Arrays.asList("Continue.", "Repeat previous action.");
+        crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email");
         //END MAIN MENU, REPEAT ACTION AND CRUD PARAM LISTS INIT
         //
         //TURN CONTACTS.TXT TO STRING LIST.
@@ -145,13 +145,18 @@ public class Main {
         boolean keepLooping = true;
         do {
             int counter = 1;
-            System.out.println("----------------------------------------\n");
+//            System.out.printf("*----------------------------------------*\n|%40s|","");
+            System.out.printf("**-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-**\n||%39s||","");
+
             for(String option : inputList) {
-                System.out.println("\t" + counter + ". " + option);
+                System.out.printf("\n||\t" + counter + ". " +  "%-33s ||" +"", option);
                 counter++;
             }
-            System.out.println("----------------------------------------\n");
-            System.out.print("Select an option by inputting the corresponding integer: \t");
+            System.out.printf("\n||%39s||","");
+//            System.out.printf("\n*----------------------------------------*\n","");
+            System.out.printf("\n**=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=**\n","");
+
+            System.out.println("Select an option by inputting the corresponding integer: \t");
             try {
                 output = Integer.valueOf(myScanner.next());
                 if (output <= counter && output > 0) {
