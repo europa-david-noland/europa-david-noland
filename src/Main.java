@@ -44,6 +44,8 @@ public class Main {
         //
         //RUN PROGRAM
         int userSelected = Integer.MAX_VALUE;
+        System.out.println("\n\nWelcome to The Contacts App.");
+        System.out.println("With this app you can manage your contacts list.\n\n");
         do {
             userSelected = selectFromList(mainMenuList);
             switch(userSelected) {
