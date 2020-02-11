@@ -8,33 +8,40 @@ public class Main {
     private static List<String> contactList = new ArrayList<>();
     private static List<Contact> contactObjList = new ArrayList<>();
     private static List<String> repeatAction = new ArrayList<>();
-
+    private static List<String> mainMenuList = new ArrayList<>();
+    private static List<String> crudParamOptions = new ArrayList<>();
     //main
     public static void main(String[] args) {
         initContacts();
-        //Initial tests
-        List<String> currentList = fileToList();
-        if(currentList.size()<2) {
-            Contact firstContact = new Contact("Test", "Testerson", "1234567890", "test@email.com");
-            Contact secondContact = new Contact("Testy", "Testinez", "0987654321", "testinez@email.com");
+        //Main menu and repeat action lists initialized
+        mainMenuList = Arrays.asList("Exit.", "View Contacts", "Add a new contact", "Search a contact by first name.", "Search a contact by last name.", "Delete an existing contact.");
+        repeatAction = Arrays.asList("Continue.", "Repeat previous action.");
+        crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email");
+        //End main menu, repeat action, and crud param options lists initialized
+        //Check if file is blank. If so make dir and file. Then write to file.
+        //Prob whack code but it doesnt work with only if so I improvised
+        try {
+            contactList = fileToList();
+        } catch (Exception e) {
+            Contact firstContact = new Contact("Alice", "Smith", "1234567890", "jSMITH@email.com");
+            Contact secondContact = new Contact("Alice", "Holmes", "0987654321", "aliceisholmes@email.com");
             contactList.add(firstContact.toContactString());
             contactList.add(secondContact.toContactString());
-            System.out.println(contactList);
-
             writeFile();
         }
-        //Initial tests end
+        if(contactList.size() <= 0) {
+            Contact firstContact = new Contact("Alice", "Smith", "1234567890", "jSMITH@email.com");
+            Contact secondContact = new Contact("Alice", "Holmes", "0987654321", "aliceisholmes@email.com");
+            contactList.add(firstContact.toContactString());
+            contactList.add(secondContact.toContactString());
+            writeFile();
+        }
+        //End initial tests
 
-        //insert sorcery method
+        //Reads the contacts.txt converts each line into its own Contact obj
         fileToContactObjs();
-        System.out.println(contactList.toString());
-        //main menu
-        String[] mainMenuArr = new String[] {"Exit.", "View Contacts", "Add a new contact", "Search a contact by first name.", "Search a contact by last name.", "Delete an existing contact."};
-        List<String> mainMenuList = new ArrayList<>(Arrays.asList(mainMenuArr));
-
-        repeatAction.add("Exit to main menu.");
-        repeatAction.add("Repeat previous action");
-
+        //End reads the contacts.txt converts each line into its own Contact obj
+        //Run the program
         int userSelected = Integer.MAX_VALUE;
         do {
             userSelected = selectFromList(mainMenuList);
@@ -59,28 +66,29 @@ public class Main {
                     break;
                 case 6:
                     //Delete existing contact
+                    deleteContactFromFile();
                     break;
                 default:
                     break;
             }
         } while(userSelected != 1);
-    }
 
+    }
+    //End run the program
     //check for and create initial contacts file
     static void initContacts(){
         String directory = "contacts";
         String filename = "contacts.txt";
         Path contactsDirectory= Paths.get(directory);
         Path contactsFile = Paths.get(directory, filename);
-
         try {
             if (Files.notExists(contactsDirectory)) {
                 Files.createDirectories((contactsDirectory));
-//                System.out.println("Created directory");
+                System.out.println("Created directory");
             }
             if (!Files.exists(contactsFile)) {
                 Files.createFile(contactsFile);
-//                System.out.println("Created file");
+                System.out.println("Created file");
             }
         } catch(IOException ioe){
             ioe.printStackTrace();
@@ -95,23 +103,20 @@ public class Main {
         } catch(IOException ioe){
             ioe.printStackTrace();
         }
+        //refreshes list of Contact objs
+//        fileToContactObjs();
     }
 
-    //read file
+    //read file to list
     static List<String> fileToList(){
         List<String> contacts = null;
-
         try {
             Path contactsListPath = Paths.get("contacts","contacts.txt");
             contacts = Files.readAllLines(contactsListPath);
-            //from class example
-//            for (String line : contacts) {
-//                System.out.println(line);
-//            }
+            System.out.println("Line 120. " + contacts);
         } catch (IOException ioe){
             ioe.printStackTrace();
         }
-
         return contacts;
     }
 
@@ -167,29 +172,25 @@ public class Main {
 
     public static void viewContactList() {
         boolean keepLooping = true;
-
-        //viewing function
-        for(String eachContact : contactList){
-            System.out.println(eachContact);
-        }
-
         do{
+            //viewing function
+            for(String eachContact : contactList){
+                System.out.println(eachContact);
+            }
             //create functionality that sets keep looping to false
             myScanner.nextLine();
-            System.out.println("Input 1 to exit to main menu: \t");
             try {
-                int viewListQuit = Integer.valueOf(myScanner.next());
-                if(viewListQuit==1){
+                int userSelect = selectFromList(repeatAction);
+                if(userSelect == 1){
                     keepLooping = false;
                 }
-            } catch(Exception e) {
-
-            }
-
+            } catch(Exception ignored) {}
         } while(keepLooping);
     }
-
+    //TODO FIX THIS TO WORK WITH DELETE
     public static void fileToContactObjs() {
+        //new and untested
+        contactObjList.clear();
         List<String> myList = fileToList();
         String strList = String.join( ",", myList);
         String[] strArr = strList.split(",");
@@ -197,82 +198,176 @@ public class Main {
             contact = contact.replace("|", "&");
             String[] contactElems = contact.split("&");
             String[] nameArr = contactElems[0].split(" ");
+            //ArrayIndexOutOfBoundsException below.
             Contact newContact = new Contact(nameArr[0].trim(), nameArr[1].trim(), contactElems[1], contactElems[2]);
             contactObjList.add(newContact);
-            contactList.add(newContact.toContactString());
+            //BELOW WAS CAUSING DOUBLE DATA IN TERM BUT NOT .TXT
+//            contactList.add(newContact.toContactString());
         }
     }
 
-    public static void searchFirstName(){
+    public static Map<String, Long> searchFirstName(){
         boolean keepLooping = true;
+        Map<String, Long> outputMap;
         do{
-            List<String> bucket = new ArrayList<>();
-
+            outputMap = new HashMap<>();
             myScanner.nextLine();
             System.out.println("\nEnter your search string: \n");
             String searchTerm = myScanner.next();
             myScanner.nextLine();
 
             for(Contact result : contactObjList){
-                String firstName = result.getfirstName();
+                String firstName = result.getFirstName();
                 if(firstName.toLowerCase().contains(searchTerm.toLowerCase())){
-                    bucket.add(result.toContactString());
+                    outputMap.put(result.toContactString(), result.getId());
                 }
             }
-
-            if(bucket.size()==0){
+            if(outputMap.size() == 0){
                 System.out.println("\nNo results found.\n");
             } else {
                 System.out.println("\nHere are your search results:\n");
             }
-
-            for(String contents: bucket){
-                System.out.println(contents);
+            for(Map.Entry<String, Long> entry : outputMap.entrySet()){
+                System.out.println(entry.getKey());
             }
             System.out.println("\n");
-
             int userSelect = selectFromList(repeatAction);
             if (userSelect==1){
                 keepLooping=false;
             }
         }
         while(keepLooping);
-
+        return outputMap;
     }
-    public static void searchLastName(){
+    public static Map<String, Long> searchLastName(){
         boolean keepLooping = true;
+        Map<String, Long> outputMap;
         do{
-            List<String> bucket = new ArrayList<>();
-
+            outputMap = new HashMap<>();
             myScanner.nextLine();
             System.out.println("\nEnter your search string: \n");
             String searchTerm = myScanner.next();
             myScanner.nextLine();
-
             for(Contact result : contactObjList){
-                String lastName = result.getlastName();
+                String lastName = result.getLastName();
                 if(lastName.toLowerCase().contains(searchTerm.toLowerCase())){
-                    bucket.add(result.toContactString());
+                    outputMap.put(result.toContactString(), result.getId());
                 }
             }
-
-            if(bucket.size()==0){
+            if(outputMap.size() == 0){
                 System.out.println("\nNo results found.\n");
             } else {
                 System.out.println("\nHere are your search results:\n");
             }
-
-            for(String contents: bucket){
-                System.out.println(contents);
+            for(Map.Entry<String, Long> entry : outputMap.entrySet()){
+                System.out.println(entry.getKey());
             }
             System.out.println("\n");
-
             int userSelect = selectFromList(repeatAction);
             if (userSelect==1){
                 keepLooping=false;
             }
         }
         while(keepLooping);
-
+        return outputMap;
+    }
+//
+//    //saved as a fallback until testing commplete
+//    public static List<String> searchLastName(){
+//        boolean keepLooping = true;
+//        List<String> bucket;
+//        List<String> idList;
+//        do{
+//            bucket = new ArrayList<>();
+//            idList = new ArrayList<>();
+//            myScanner.nextLine();
+//            System.out.println("\nEnter your search string: \n");
+//            String searchTerm = myScanner.next();
+//            myScanner.nextLine();
+//            for(Contact result : contactObjList){
+//                String lastName = result.getLastName();
+//                if(lastName.toLowerCase().contains(searchTerm.toLowerCase())){
+//                    bucket.add(result.toContactString());
+//                    idList.add(Long.toString(result.getId()));
+//                }
+//            }
+//            if(bucket.size() == 0 ){
+//                System.out.println("\nNo results found.\n");
+//            } else {
+//                System.out.println("\nHere are your search results:\n");
+//            }
+//
+//            for(String contents: bucket){
+//                System.out.println(contents);
+//            }
+//            System.out.println("\n");
+//
+//            int userSelect = selectFromList(repeatAction);
+//            if (userSelect==1){
+//                keepLooping=false;
+//            }
+//        }
+//        while(keepLooping);
+//        bucket.addAll(idList);
+//        return bucket;
+//    }
+    public static void deleteContactObj(long id) {
+//        contactList = new ArrayList<>();
+        System.out.println(id);
+        contactList.clear();
+        Contact deleteMe = null;
+        for(Contact contact : contactObjList) {
+            if(contact.getId() == id) {
+                deleteMe = contact;
+            }
+        }
+        System.out.println(deleteMe.toContactString());
+        contactObjList.remove(deleteMe);
+        for(Contact contactObj : contactObjList) {
+            contactList.add(contactObj.toContactString());
+            System.out.println(contactObj.toContactString() + " added");
+        }
+        System.out.println(contactObjList);
+    }
+    public static void deleteContactFromFile() {
+        boolean keepLooping = true;
+        do{
+            myScanner.nextLine();
+            int userSelected = selectFromList(crudParamOptions);
+            switch(userSelected) {
+                case 1:
+                    //By first name
+                    Map<String, Long> firstMap = searchFirstName();
+                    List<String> firstStrList = new ArrayList<>(firstMap.keySet());
+                    System.out.println("Which would you like to delete?");
+                    int firstSelection = selectFromList(firstStrList);
+                    int index = firstSelection - 1;
+                    long firstDeleteId = firstMap.get(firstStrList.get(index));
+                    deleteContactObj(firstDeleteId);
+                    writeFile();
+                    break;
+                case 2:
+                    //By last name
+                    Map<String, Long> lastMap = searchLastName();
+                    List<String> lastStrList = new ArrayList<>(lastMap.keySet());
+                    System.out.println("Which would you like to delete?");
+                    int lastSelection = selectFromList(lastStrList);
+                    long lastDeleteId = lastMap.get(lastStrList.get(lastSelection));
+                    deleteContactObj(lastDeleteId);
+                    break;
+                case 3:
+                    //By phone
+                    break;
+                case 4:
+                    //By email
+                    break;
+                default:
+                    break;
+            }
+            int userContinue = selectFromList(repeatAction);
+            if (userContinue == 1){
+                keepLooping=false;
+            }
+        } while(keepLooping);
     }
 }

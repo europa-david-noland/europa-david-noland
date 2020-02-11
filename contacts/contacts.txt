@@ -1,4 +1,2 @@
-Test Testerson |   1234567890   |   test@email.com
-Testy Testinez |   0987654321   |   testinez@email.com
-Bob Saget |  1111111111  |  bobsaggggettttt@gmail.com
-Chuck Norris | 9999999999 | chuckyN@gmail.com
+Alice Smith |  1234567890  |  jSMITH@email.com
+bob b |  3333333333  |  bb

@@ -1,59 +1,61 @@
 public class Contact {
-    //first name
+    //First name
     private String firstName;
-
-    public String getfirstName() {
-        return firstName;
+    public String getFirstName() {
+        return this.firstName;
     }
-
-    public void setfirstName(String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    //last name
+    //End first name
+    //Last name
     private String lastName;
-
-    public String getlastName() {
-        return lastName;
+    public String getLastName() {
+        return this.lastName;
     }
-
-    public void setlastName(String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-
-    //phone
+    //End last name
+    //Phone
     private String phone;
-
     public String getPhone() {
-        return phone;
+        return this.phone;
     }
-
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-    //email
+    //End phone
+    //Email
     private String email;
-
     public String getEmail() {
-        return email;
+        return this.email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
-    //constructor
-    Contact(String firstName, String lastName, String phone, String email){
-        this.firstName=firstName;
-        this.lastName=lastName;
-        this.phone=phone;
-        this.email=email;
+    //End email
+    //ID for CRUD
+    private static long counter = -1;
+    private long id;
+    public long getId() {
+        return this.id;
     }
-
-    //to contact string
+    //End ID for CRUD
+    //Constructor
+    Contact(String firstName, String lastName, String phone, String email){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+        this.id = counter;
+        counter++;
+    }
+    //End constructor
+    //Use on object before adding to contactList then writing to file. (Write takes String object) Changing the format of this will crash the app
     public String toContactString(){
         return this.firstName + " " + this.lastName + " | " + this.phone + " | " + this.email;
     }
+    //End use on object before adding to contactList then writing to file. (Write takes String object) Changing the format of this will crash the app
 
 }
