@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.*;
 import java.util.*;
 
@@ -199,11 +200,13 @@ public class Main {
         }
     }
 
-    public static void searchFirstName(){
+    public static List<Integer> searchFirstName(){
         boolean keepLooping = true;
+        List<String> bucket;
+        List<Integer> idList;
         do{
-            List<String> bucket = new ArrayList<>();
-
+            bucket = new ArrayList<>();
+            idList = new ArrayList<>();
             myScanner.nextLine();
             System.out.println("\nEnter your search string: \n");
             String searchTerm = myScanner.next();
@@ -215,8 +218,7 @@ public class Main {
                     bucket.add(result.toContactString());
                 }
             }
-
-            if(bucket.size()==0){
+            if(bucket.size() == 0){
                 System.out.println("\nNo results found.\n");
             } else {
                 System.out.println("\nHere are your search results:\n");
@@ -233,13 +235,15 @@ public class Main {
             }
         }
         while(keepLooping);
-
+        return idList;
     }
-    public static void searchLastName(){
+    public static List<Integer> searchLastName(){
         boolean keepLooping = true;
+        List<String> bucket;
+        List<Integer> idList;
         do{
-            List<String> bucket = new ArrayList<>();
-
+            bucket = new ArrayList<>();
+            idList = new ArrayList<>();
             myScanner.nextLine();
             System.out.println("\nEnter your search string: \n");
             String searchTerm = myScanner.next();
@@ -268,6 +272,7 @@ public class Main {
             }
         }
         while(keepLooping);
+        return idList;
     }
     public static void deleteContact(){
         boolean keepLooping = true;
@@ -276,16 +281,19 @@ public class Main {
             int userSelected = selectFromList(crudParamOptions);
             switch(userSelected) {
                 case 1:
-                    //do thing
+                    //By first name
                     break;
                 case 2:
-                    //do thing
+                    //By last name
                     break;
                 case 3:
-                    //do thing
+                    //By phone
                     break;
                 case 4:
-                    //do thing
+                    //By email
+                    break;
+                default:
+                    break;
             }
             int userContinue = selectFromList(repeatAction);
             if (userContinue == 1){
