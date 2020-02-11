@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         initContacts();
         //Main menu and repeat action lists initialized
-        mainMenuList = Arrays.asList("Exit.", "View Contacts", "Add a new contact", "Search a contact by first name.", "Search a contact by last name.", "Delete an existing contact.");
+        mainMenuList = Arrays.asList("Exit.", "View Contacts.", "Add a new contact.", "Search a contact.", "Delete an existing contact.");
         repeatAction = Arrays.asList("Continue.", "Repeat previous action.");
         crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email");
         //End main menu, repeat action, and crud param options lists initialized
@@ -58,13 +58,9 @@ public class Main {
                     break;
                 case 4:
                     //Search by first name
-                    searchFirstName();
+                    search();
                     break;
                 case 5:
-                    //Search by last name
-                    searchLastName();
-                    break;
-                case 6:
                     //Delete existing contact
                     deleteContactFromFile();
                     break;
@@ -104,7 +100,7 @@ public class Main {
             ioe.printStackTrace();
         }
         //refreshes list of Contact objs
-//        fileToContactObjs();
+        fileToContactObjs();
     }
 
     //read file to list
@@ -239,6 +235,7 @@ public class Main {
         while(keepLooping);
         return outputMap;
     }
+
     public static Map<String, Long> searchLastName(){
         boolean keepLooping = true;
         Map<String, Long> outputMap;
@@ -251,6 +248,74 @@ public class Main {
             for(Contact result : contactObjList){
                 String lastName = result.getLastName();
                 if(lastName.toLowerCase().contains(searchTerm.toLowerCase())){
+                    outputMap.put(result.toContactString(), result.getId());
+                }
+            }
+            if(outputMap.size() == 0){
+                System.out.println("\nNo results found.\n");
+            } else {
+                System.out.println("\nHere are your search results:\n");
+            }
+            for(Map.Entry<String, Long> entry : outputMap.entrySet()){
+                System.out.println(entry.getKey());
+            }
+            System.out.println("\n");
+            int userSelect = selectFromList(repeatAction);
+            if (userSelect==1){
+                keepLooping=false;
+            }
+        }
+        while(keepLooping);
+        return outputMap;
+    }
+
+    public static Map<String, Long> searchPhone(){
+        boolean keepLooping = true;
+        Map<String, Long> outputMap;
+        do{
+            outputMap = new HashMap<>();
+            myScanner.nextLine();
+            System.out.println("\nEnter your search string: \n");
+            String searchTerm = myScanner.next();
+            myScanner.nextLine();
+
+            for(Contact result : contactObjList){
+                String phone = result.getPhone();
+                if(phone.toLowerCase().contains(searchTerm.toLowerCase())){
+                    outputMap.put(result.toContactString(), result.getId());
+                }
+            }
+            if(outputMap.size() == 0){
+                System.out.println("\nNo results found.\n");
+            } else {
+                System.out.println("\nHere are your search results:\n");
+            }
+            for(Map.Entry<String, Long> entry : outputMap.entrySet()){
+                System.out.println(entry.getKey());
+            }
+            System.out.println("\n");
+            int userSelect = selectFromList(repeatAction);
+            if (userSelect==1){
+                keepLooping=false;
+            }
+        }
+        while(keepLooping);
+        return outputMap;
+    }
+
+    public static Map<String, Long> searchEmail(){
+        boolean keepLooping = true;
+        Map<String, Long> outputMap;
+        do{
+            outputMap = new HashMap<>();
+            myScanner.nextLine();
+            System.out.println("\nEnter your search string: \n");
+            String searchTerm = myScanner.next();
+            myScanner.nextLine();
+
+            for(Contact result : contactObjList){
+                String email = result.getEmail();
+                if(email.toLowerCase().contains(searchTerm.toLowerCase())){
                     outputMap.put(result.toContactString(), result.getId());
                 }
             }
@@ -369,5 +434,27 @@ public class Main {
                 keepLooping=false;
             }
         } while(keepLooping);
+
+    }
+
+    public static void search() {
+    int userSelected = selectFromList(crudParamOptions);
+    switch (userSelected){
+        case 1:
+            searchFirstName();
+            break;
+        case 2:
+            searchLastName();
+            break;
+        case 3:
+            searchPhone();
+            break;
+        case 4:
+            searchEmail();
+            break;
+        default:
+            break;
+    }
+
     }
 }
