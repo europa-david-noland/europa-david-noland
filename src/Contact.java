@@ -53,7 +53,7 @@ public class Contact {
     }
     //End constructor
     //Use on object before adding to contactList then writing to file. (Write takes String object) Changing the format of this will crash the app
-    public String toContactString(){
+    public String toContactString() {
         return this.firstName + " " + this.lastName + " | " + this.phone + " | " + this.email;
     }
     //End use on object before adding to contactList then writing to file. (Write takes String object) Changing the format of this will crash the app

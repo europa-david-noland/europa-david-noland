@@ -3,23 +3,23 @@ import java.nio.file.*;
 import java.util.*;
 
 public class Main {
-    //contact list field
+
     private static Scanner myScanner = new Scanner(System.in);
     private static List<String> contactList = new ArrayList<>();
     private static List<Contact> contactObjList = new ArrayList<>();
     private static List<String> repeatAction = new ArrayList<>();
     private static List<String> mainMenuList = new ArrayList<>();
     private static List<String> crudParamOptions = new ArrayList<>();
-    //main
+
     public static void main(String[] args) {
         initContacts();
-        //Main menu and repeat action lists initialized
+        //MAIN MENU, REPEAT ACTION AND CRUD PARAM LISTS INIT
         mainMenuList = Arrays.asList("Exit.", "View Contacts.", "Add a new contact.", "Search a contact.", "Delete an existing contact.");
         repeatAction = Arrays.asList("Continue.", "Repeat previous action.");
         crudParamOptions = Arrays.asList("By First Name", "By Last Name", "By Phone", "By Email");
-        //End main menu, repeat action, and crud param options lists initialized
-        //Check if file is blank. If so make dir and file. Then write to file.
-        //Prob whack code but it doesnt work with only if so I improvised
+        //END MAIN MENU, REPEAT ACTION AND CRUD PARAM LISTS INIT
+        //
+        //TURN CONTACTS.TXT TO STRING LIST.
         try {
             contactList = fileToList();
         } catch (Exception e) {
@@ -36,12 +36,13 @@ public class Main {
             contactList.add(secondContact.toContactString());
             writeFile();
         }
-        //End initial tests
-
-        //Reads the contacts.txt converts each line into its own Contact obj
+        //TURN CONTACTS.TXT TO STRING LIST.
+        //
+        //CONVERT STRING LIST TO LIST OF CONTACT OBJS
         fileToContactObjs();
-        //End reads the contacts.txt converts each line into its own Contact obj
-        //Run the program
+        //CONVERT STRING LIST TO LIST OF CONTACT OBJS
+        //
+        //RUN PROGRAM
         int userSelected = Integer.MAX_VALUE;
         do {
             userSelected = selectFromList(mainMenuList);
@@ -68,10 +69,11 @@ public class Main {
                     break;
             }
         } while(userSelected != 1);
-
+        //END RUN PROGRAM
     }
-    //End run the program
-    //check for and create initial contacts file
+    //METHODS THAT INTERACT WITH FILE DIRECTLY
+    //
+    //CREATE DIR AND FILE IF ABSENT
     static void initContacts(){
         String directory = "contacts";
         String filename = "contacts.txt";
@@ -90,20 +92,9 @@ public class Main {
             ioe.printStackTrace();
         }
     }
-
-    //generic write method (take list and write)
-    static void writeFile(){
-        try{
-            Path contactsListPath = Paths.get("contacts","contacts.txt");
-            Files.write(contactsListPath, contactList);
-        } catch(IOException ioe){
-            ioe.printStackTrace();
-        }
-        //refreshes list of Contact objs
-        fileToContactObjs();
-    }
-
-    //read file to list
+    //END CREATE DIR AND FILE IF ABSENT
+    //
+    //CONVERT FILE CONTENTS TO STRING LIST
     static List<String> fileToList(){
         List<String> contacts = null;
         try {
@@ -115,7 +106,41 @@ public class Main {
         }
         return contacts;
     }
-
+    //END CONVERT FILE CONTENTS TO STRING LIST
+    //
+    //WRITE STRING LIST TO CONTACTS.TXT
+    static void writeFile(){
+        try{
+            Path contactsListPath = Paths.get("contacts","contacts.txt");
+            Files.write(contactsListPath, contactList);
+        } catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+        //refreshes list of Contact objs
+        fileToContactObjs();
+    }
+    //END WRITE STRING LIST TO CONTACTS.TXT
+    //
+    //STRING LIST TO CONTACT OBJ LIST
+    public static void fileToContactObjs() {
+        contactObjList.clear();
+        List<String> myList = fileToList();
+        String strList = String.join( ",", myList);
+        String[] strArr = strList.split(",");
+        for(String contact : strArr) {
+            contact = contact.replace("|", "&");
+            String[] contactElems = contact.split("&");
+            String[] nameArr = contactElems[0].split(" ");
+            //ArrayIndexOutOfBoundsException below.
+            Contact newContact = new Contact(nameArr[0].trim(), nameArr[1].trim(), contactElems[1], contactElems[2]);
+            contactObjList.add(newContact);
+        }
+    }
+    //END STRING LIST TO CONTACT OBJ LIST
+    //
+    //END METHODS THAT INTERACT WITH FILE DIRECTLY
+    //
+    //DISPLAY THE LIST THAT IS INPUT. USER SELECTS AN INT THAT IS RETURNED
     public static int selectFromList(List<String> inputList){
         int output = Integer.MAX_VALUE;
         boolean keepLooping = true;
@@ -138,7 +163,29 @@ public class Main {
 
         return output;
     }
-
+    //END DISPLAY THE LIST THAT IS INPUT. USER SELECTS AN INT THAT IS RETURNED
+    //
+    //PRINT CONTACTS FROM STRING LIST OF CONTACTS
+    public static void viewContactList() {
+        boolean keepLooping = true;
+        do{
+            //viewing function
+            for(String eachContact : contactList){
+                System.out.println(eachContact);
+            }
+            //create functionality that sets keep looping to false
+            myScanner.nextLine();
+            try {
+                int userSelect = selectFromList(repeatAction);
+                if(userSelect == 1){
+                    keepLooping = false;
+                }
+            } catch(Exception ignored) {}
+        } while(keepLooping);
+    }
+    //END PRINT CONTACTS FROM STRING LIST OF CONTACTS
+    //
+    //CREATE CONTACT OBJ ADD STRING TO LIST. WRITE FILE(WRITE FILE UPDATES OBJ LIST)
     public static void addContact() {
         boolean keepLooping = true;
         myScanner.nextLine();
@@ -165,43 +212,31 @@ public class Main {
         contactList.add(newContact.toContactString());
         writeFile();
     }
-
-    public static void viewContactList() {
-        boolean keepLooping = true;
-        do{
-            //viewing function
-            for(String eachContact : contactList){
-                System.out.println(eachContact);
-            }
-            //create functionality that sets keep looping to false
-            myScanner.nextLine();
-            try {
-                int userSelect = selectFromList(repeatAction);
-                if(userSelect == 1){
-                    keepLooping = false;
-                }
-            } catch(Exception ignored) {}
-        } while(keepLooping);
-    }
-    //TODO FIX THIS TO WORK WITH DELETE
-    public static void fileToContactObjs() {
-        //new and untested
-        contactObjList.clear();
-        List<String> myList = fileToList();
-        String strList = String.join( ",", myList);
-        String[] strArr = strList.split(",");
-        for(String contact : strArr) {
-            contact = contact.replace("|", "&");
-            String[] contactElems = contact.split("&");
-            String[] nameArr = contactElems[0].split(" ");
-            //ArrayIndexOutOfBoundsException below.
-            Contact newContact = new Contact(nameArr[0].trim(), nameArr[1].trim(), contactElems[1], contactElems[2]);
-            contactObjList.add(newContact);
-            //BELOW WAS CAUSING DOUBLE DATA IN TERM BUT NOT .TXT
-//            contactList.add(newContact.toContactString());
+    //END CREATE CONTACT OBJ ADD STRING TO LIST. WRITE FILE(WRITE FILE UPDATES OBJ LIST)
+    //
+    //MAIN SEARCH
+    public static void search() {
+        int userSelected = selectFromList(crudParamOptions);
+        switch (userSelected){
+            case 1:
+                searchFirstName();
+                break;
+            case 2:
+                searchLastName();
+                break;
+            case 3:
+                searchPhone();
+                break;
+            case 4:
+                searchEmail();
+                break;
+            default:
+                break;
         }
     }
-
+    //END MAIN SEARCH
+    //
+    //SEARCH METHODS
     public static Map<String, Long> searchFirstName(){
         boolean keepLooping = true;
         Map<String, Long> outputMap;
@@ -231,11 +266,9 @@ public class Main {
             if (userSelect==1){
                 keepLooping=false;
             }
-        }
-        while(keepLooping);
+        } while(keepLooping);
         return outputMap;
     }
-
     public static Map<String, Long> searchLastName(){
         boolean keepLooping = true;
         Map<String, Long> outputMap;
@@ -264,11 +297,9 @@ public class Main {
             if (userSelect==1){
                 keepLooping=false;
             }
-        }
-        while(keepLooping);
+        } while(keepLooping);
         return outputMap;
     }
-
     public static Map<String, Long> searchPhone(){
         boolean keepLooping = true;
         Map<String, Long> outputMap;
@@ -298,11 +329,9 @@ public class Main {
             if (userSelect==1){
                 keepLooping=false;
             }
-        }
-        while(keepLooping);
+        } while(keepLooping);
         return outputMap;
     }
-
     public static Map<String, Long> searchEmail(){
         boolean keepLooping = true;
         Map<String, Long> outputMap;
@@ -332,68 +361,12 @@ public class Main {
             if (userSelect==1){
                 keepLooping=false;
             }
-        }
-        while(keepLooping);
+        } while(keepLooping);
         return outputMap;
     }
-//
-//    //saved as a fallback until testing commplete
-//    public static List<String> searchLastName(){
-//        boolean keepLooping = true;
-//        List<String> bucket;
-//        List<String> idList;
-//        do{
-//            bucket = new ArrayList<>();
-//            idList = new ArrayList<>();
-//            myScanner.nextLine();
-//            System.out.println("\nEnter your search string: \n");
-//            String searchTerm = myScanner.next();
-//            myScanner.nextLine();
-//            for(Contact result : contactObjList){
-//                String lastName = result.getLastName();
-//                if(lastName.toLowerCase().contains(searchTerm.toLowerCase())){
-//                    bucket.add(result.toContactString());
-//                    idList.add(Long.toString(result.getId()));
-//                }
-//            }
-//            if(bucket.size() == 0 ){
-//                System.out.println("\nNo results found.\n");
-//            } else {
-//                System.out.println("\nHere are your search results:\n");
-//            }
-//
-//            for(String contents: bucket){
-//                System.out.println(contents);
-//            }
-//            System.out.println("\n");
-//
-//            int userSelect = selectFromList(repeatAction);
-//            if (userSelect==1){
-//                keepLooping=false;
-//            }
-//        }
-//        while(keepLooping);
-//        bucket.addAll(idList);
-//        return bucket;
-//    }
-    public static void deleteContactObj(long id) {
-//        contactList = new ArrayList<>();
-        System.out.println(id);
-        contactList.clear();
-        Contact deleteMe = null;
-        for(Contact contact : contactObjList) {
-            if(contact.getId() == id) {
-                deleteMe = contact;
-            }
-        }
-        System.out.println(deleteMe.toContactString());
-        contactObjList.remove(deleteMe);
-        for(Contact contactObj : contactObjList) {
-            contactList.add(contactObj.toContactString());
-            System.out.println(contactObj.toContactString() + " added");
-        }
-        System.out.println(contactObjList);
-    }
+    //END SEARCH METHODS
+    //
+    //DELETE CONTACT MAIN
     public static void deleteContactFromFile() {
         boolean keepLooping = true;
         do{
@@ -434,27 +407,25 @@ public class Main {
                 keepLooping=false;
             }
         } while(keepLooping);
-
     }
-
-    public static void search() {
-    int userSelected = selectFromList(crudParamOptions);
-    switch (userSelected){
-        case 1:
-            searchFirstName();
-            break;
-        case 2:
-            searchLastName();
-            break;
-        case 3:
-            searchPhone();
-            break;
-        case 4:
-            searchEmail();
-            break;
-        default:
-            break;
+    //END DELETE MAIN
+    //DELETE CONTACT OBJ (CALLED IN DELETE MAIN)
+    public static void deleteContactObj(long id) {
+        System.out.println(id);
+        contactList.clear();
+        Contact deleteMe = null;
+        for(Contact contact : contactObjList) {
+            if(contact.getId() == id) {
+                deleteMe = contact;
+            }
+        }
+        System.out.println(deleteMe.toContactString());
+        contactObjList.remove(deleteMe);
+        for(Contact contactObj : contactObjList) {
+            contactList.add(contactObj.toContactString());
+            System.out.println(contactObj.toContactString() + " added");
+        }
+        System.out.println(contactObjList);
     }
-
-    }
+    //END DELETE CONTACT OBJ (CALLED IN DELETE MAIN)
 }
