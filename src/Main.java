@@ -132,6 +132,11 @@ public class Main {
             contact = contact.replace("|", "&");
             String[] contactElems = contact.split("&");
             String[] nameArr = contactElems[0].split(" ");
+            //danger code. comment out for demo
+            contactElems[1] = contactElems[1].replace("(", "");
+            contactElems[1] = contactElems[1].replace(")", "");
+            contactElems[1] = contactElems[1].replace("-", "");
+            //
             //ArrayIndexOutOfBoundsException below.
             Contact newContact = new Contact(nameArr[0].trim(), nameArr[1].trim(), contactElems[1], contactElems[2]);
             contactObjList.add(newContact);

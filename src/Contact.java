@@ -54,9 +54,13 @@ public class Contact {
     //End constructor
     //Use on object before adding to contactList then writing to file. (Write takes String object) Changing the format of this will crash the app
     public String toContactString() {
+        this.phone = this.phone.replace("(", "");
+        this.phone = this.phone.replace(")", "");
+        this.phone = this.phone.replace("-", "");
+        this.phone = this.phone.replace(" ", "");
         String phoneFormat = "(" + this.phone.substring(0,3) + ")" + this.phone.substring(3, 6) + "-" + this.phone.substring(6);
-        String output = String.format("%s %s %-32s %s %-32s %s", this.firstName, this.lastName, "|", phoneFormat,  "|", this.email);
-        return this.firstName + " " + this.lastName + " | " + this.phone + " | " + this.email;
+//        String output = String.format("%s %s %-32s %s %-32s %s", this.firstName, this.lastName, "|", phoneFormat,  "|", this.email);
+        return this.firstName + " " + this.lastName + " | " + phoneFormat + " | " + this.email;
     }
     //End use on object before adding to contactList then writing to file. (Write takes String object) Changing the format of this will crash the app
 
