@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
-public class Main {
+public class ContactManager {
 
     private static Scanner myScanner = new Scanner(System.in);
     private static List<String> contactList = new ArrayList<>();
@@ -40,7 +40,7 @@ public class Main {
         //
         //CONVERT STRING LIST TO LIST OF CONTACT OBJS
         fileToContactObjs();
-        //CONVERT STRING LIST TO LIST OF CONTACT OBJS
+        //END CONVERT STRING LIST TO LIST OF CONTACT OBJS
         //
         //RUN PROGRAM
         int userSelected = Integer.MAX_VALUE;
