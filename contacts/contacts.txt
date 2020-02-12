@@ -1,7 +1,2 @@
 Alice Smith | (123)456-7890 | jSMITH@email.com
 Alice Holmes | (098)765-4321 | aliceisholmes@email.com
-Bobby Shmurda | (999)000-9876 | bobbyshMurda@gmail.com
-Bob Saget | (324)123-4567 | bobbysag@hotmail.com
-Willy Wonka | (345)123-5674 | wwchocolate@ww.com
-Bobby Baratheon | (867)543-4567 | bobbyb@gotc.com
-Jon Snow | (908)976-5647 | nightswatch@aol.com
