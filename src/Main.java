@@ -197,14 +197,25 @@ public class Main {
     //
     //CREATE CONTACT OBJ ADD STRING TO LIST. WRITE FILE(WRITE FILE UPDATES OBJ LIST)
     public static void addContact() {
+        boolean isBadEmail = true;
         boolean keepLooping = true;
         myScanner.nextLine();
         System.out.println("Input contact first name: \t");
         String firstName = myScanner.nextLine();
+        firstName = firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase();
         System.out.println("Input contact last name: \t");
         String lastName = myScanner.nextLine();
-        System.out.println("Input contact email: \t");
-        String email = myScanner.nextLine();
+        lastName = lastName.substring(0,1).toUpperCase() + lastName.substring(1).toLowerCase();
+        String email = "";
+        do {
+            System.out.println("Input contact email: \t");
+            email = myScanner.nextLine();
+            if(email.contains("@") && email.contains(".")) {
+                isBadEmail = false;
+            } else {
+                System.out.println("Please input a proper email address.");
+            }
+        } while (isBadEmail);
         String phone = "";
         do {
             System.out.println("Input contact ten digit phone number without any special characters: \t");
@@ -220,6 +231,7 @@ public class Main {
         } while(keepLooping);
         Contact newContact = new Contact(firstName, lastName, phone, email);
         contactList.add(newContact.toContactString());
+        System.out.println("You added: " + newContact.toContactString());
         writeFile();
     }
     //END CREATE CONTACT OBJ ADD STRING TO LIST. WRITE FILE(WRITE FILE UPDATES OBJ LIST)
@@ -447,7 +459,7 @@ public class Main {
                 deleteMe = contact;
             }
         }
-        System.out.println(deleteMe.toContactString());
+        System.out.println("You deleted: " + deleteMe.toContactString());
         contactObjList.remove(deleteMe);
         for(Contact contactObj : contactObjList) {
             contactList.add(contactObj.toContactString());
